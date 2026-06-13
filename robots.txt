@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
+User-agent: Yeti
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
 Sitemap: https://yeongdeungpo-massage.pages.dev/sitemap.xml
+Sitemap: https://yeongdeungpo-massage.pages.dev/rss.xml

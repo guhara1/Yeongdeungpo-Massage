@@ -5,7 +5,7 @@ from .site import BRAND, PHONE, PHONE_DISPLAY
 PAGE = {
     "path": "about/",
     "title": f"운영자 소개·콘텐츠 원칙 | {BRAND}",
-    "desc": "간다GO 영등포 출장마사지의 운영 주체, 콘텐츠를 만드는 사람과 검수 방식, 운영 원칙을 공개합니다. 사이트의 모든 안내가 어떤 기준으로 작성되는지 확인하세요.",
+    "desc": "간다GO 운영 주체와 콘텐츠 작성·검수 방식, 운영 원칙을 공개합니다. 영등포 방문 관리 안내.",
     "h1": "운영자 소개와 콘텐츠 원칙",
     "breadcrumb": [("운영자 소개", None)],
     "body": f"""

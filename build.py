@@ -8,6 +8,7 @@ content/ 패키지의 페이지 정의를 읽어 정적 HTML을 생성한다.
   - sitemap.xml 에는 index 허용 페이지만 포함
   - 지역+역+테마 조합 경로는 생성 자체가 불가능한 구조
 """
+import datetime
 import html
 import os
 import re
@@ -253,6 +254,8 @@ def render_page(page: dict) -> str:
 def build() -> None:
     report = []
     sitemap_urls = []
+    index_pages = []  # 색인 허용 페이지: (url, title, desc)
+    base = BASE_URL.rstrip("/")
 
     for page in PAGES:
         path = page["path"]  # "" 또는 "yeongdeungpo/yeouido-dong/" 형태
@@ -265,12 +268,25 @@ def build() -> None:
         chars = text_length(page["body"])
         noindex = page.get("noindex", False) or chars < MIN_INDEX_CHARS
         if not noindex:
-            sitemap_urls.append(BASE_URL.rstrip("/") + "/" + path)
+            url = base + "/" + path
+            sitemap_urls.append(url)
+            index_pages.append((url, page["title"], page["desc"]))
         report.append((path or "/", chars, "noindex" if noindex else "index"))
 
-    # sitemap.xml
+    today = datetime.date.today().isoformat()
+    rfc822 = datetime.datetime.now(datetime.timezone.utc).strftime(
+        "%a, %d %b %Y %H:%M:%S +0000"
+    )
+
+    def xesc(text: str) -> str:
+        return html.escape(text, quote=False)
+
+    # sitemap.xml — lastmod 포함(색인 신선도 신호)
     urls = "\n".join(
-        f"  <url><loc>{u}</loc></url>" for u in sitemap_urls
+        f"  <url><loc>{u}</loc><lastmod>{today}</lastmod>"
+        f"<changefreq>weekly</changefreq>"
+        f"<priority>{'1.0' if u == base + '/' else '0.8'}</priority></url>"
+        for u in sitemap_urls
     )
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(
@@ -279,11 +295,47 @@ def build() -> None:
             f"{urls}\n</urlset>\n"
         )
 
-    # robots.txt
+    # rss.xml — 네이버 서치어드바이저/구글 피드 제출용 RSS 2.0
+    items = "\n".join(
+        "  <item>\n"
+        f"    <title>{xesc(title)}</title>\n"
+        f"    <link>{url}</link>\n"
+        f"    <guid isPermaLink=\"true\">{url}</guid>\n"
+        f"    <description>{xesc(desc)}</description>\n"
+        f"    <pubDate>{rfc822}</pubDate>\n"
+        "  </item>"
+        for url, title, desc in index_pages
+    )
+    with open(os.path.join(ROOT, "rss.xml"), "w", encoding="utf-8") as f:
+        f.write(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+            "<channel>\n"
+            f"  <title>{xesc(BRAND)} — 영등포 출장마사지·홈타이 안내</title>\n"
+            f"  <link>{base}/</link>\n"
+            f'  <atom:link href="{base}/rss.xml" rel="self" type="application/rss+xml"/>\n'
+            "  <description>영등포구 전지역 방문 출장마사지·홈타이 예약 안내</description>\n"
+            "  <language>ko</language>\n"
+            f"  <lastBuildDate>{rfc822}</lastBuildDate>\n"
+            f"{items}\n"
+            "</channel>\n</rss>\n"
+        )
+
+    # robots.txt — 네이버(Yeti)·구글 색인 최대 허용, 크롤 지연 없음
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(
-            "User-agent: *\nAllow: /\n\n"
-            f"Sitemap: {BASE_URL.rstrip('/')}/sitemap.xml\n"
+            "User-agent: *\n"
+            "Allow: /\n\n"
+            "User-agent: Yeti\n"          # 네이버 검색 크롤러
+            "Allow: /\n\n"
+            "User-agent: Googlebot\n"
+            "Allow: /\n\n"
+            "User-agent: Bingbot\n"
+            "Allow: /\n\n"
+            "User-agent: Daumoa\n"        # 다음 크롤러
+            "Allow: /\n\n"
+            f"Sitemap: {base}/sitemap.xml\n"
+            f"Sitemap: {base}/rss.xml\n"
         )
 
     # .nojekyll (GitHub Pages)
@@ -294,7 +346,17 @@ def build() -> None:
     for p, c, r in sorted(report):
         flag = "" if (r == "noindex" or MIN_INDEX_CHARS <= c <= 2500) else "  ⚠"
         print(f"{p.ljust(width)}  {str(c).rjust(5)}  {r}{flag}")
-    print(f"\n{len(report)} pages built, {len(sitemap_urls)} in sitemap.")
+    print(f"\n{len(report)} pages built, {len(sitemap_urls)} in sitemap, "
+          f"{len(index_pages)} in rss.")
+
+    # 메타 디스크립션 길이 점검(네이버 권장 80자 이내)
+    over = [(p["path"] or "/", len(p["desc"])) for p in PAGES if len(p["desc"]) > 80]
+    if over:
+        print("\n⚠ 디스크립션 80자 초과:")
+        for path, n in over:
+            print(f"  {path}  ({n}자)")
+    else:
+        print("✓ 모든 디스크립션 80자 이내")
 
 
 if __name__ == "__main__":
