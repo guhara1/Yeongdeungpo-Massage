@@ -1,74 +1,7 @@
 # 메인 페이지 — 허브 역할. 모든 키워드를 밀어 넣지 않고 상세 페이지로 연결한다.
+# 사이트 소유확인 메타·LocalBusiness·FAQ·평점/후기 JSON-LD 는 build.py 에서 전 페이지 공통으로 주입한다.
 from .site import BASE_URL, BRAND, PHONE, PHONE_DISPLAY
 from .pricing import PRICING
-
-_JSONLD = f"""<meta name="naver-site-verification" content="44dd4dc78d020ae5a8c2d0d4c306abd0d04311c8" />
-<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "HealthAndBeautyBusiness",
-  "name": "{BRAND}",
-  "telephone": "{PHONE}",
-  "url": "{BASE_URL}/",
-  "image": "{BASE_URL}/assets/og-image.png",
-  "description": "영등포구 전지역 방문 출장마사지·홈타이 예약 안내",
-  "areaServed": {{
-    "@type": "AdministrativeArea",
-    "name": "서울특별시 영등포구"
-  }},
-  "openingHours": "Mo-Su 00:00-24:00",
-  "priceRange": "₩90,000 - ₩180,000"
-}}
-</script>
-<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {{
-      "@type": "Question",
-      "name": "영등포구 전지역 방문이 가능한가요?",
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": "예약 시간, 정확한 위치, 배정 상황에 따라 가능 여부가 달라집니다. 지역별 안내 페이지에서 영등포동, 여의도동, 당산동, 문래동, 신길동, 대림동 등 9개 대표 동 기준으로 확인할 수 있습니다."
-      }}
-    }},
-    {{
-      "@type": "Question",
-      "name": "영등포역이나 여의도역 근처도 가능한가요?",
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": "주요 역세권은 역 상세 페이지에서 주변 생활권과 함께 안내합니다. 정확한 가능 여부는 예약 시 위치를 기준으로 확인합니다."
-      }}
-    }},
-    {{
-      "@type": "Question",
-      "name": "당산1동과 당산2동은 왜 따로 없나요?",
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": "당산1·2동과 당산동1가~6가는 당산동 대표 페이지에서 통합 안내하여 중복 페이지 위험을 줄입니다. 숫자 행정동과 1가 단위 페이지는 만들지 않습니다."
-      }}
-    }},
-    {{
-      "@type": "Question",
-      "name": "당일 예약도 가능한가요?",
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": "가능할 수 있지만 저녁 시간대와 주말은 문의가 많을 수 있어 사전 예약을 권장합니다."
-      }}
-    }},
-    {{
-      "@type": "Question",
-      "name": "테마별 관리는 어디에서 확인하나요?",
-      "acceptedAnswer": {{
-        "@type": "Answer",
-        "text": "스웨디시, 타이마사지, 홈케어 등 테마별 안내 페이지에서 특징과 추천 대상을 확인할 수 있습니다."
-      }}
-    }}
-  ]
-}}
-</script>
-"""
 
 _HERO = f"""<section class="hero">
   <div class="hero-inner">
@@ -160,6 +93,25 @@ _BODY = f"""
 </ul>
 </section>
 
+<section id="longtail" class="related-links">
+<h2>주제별로 빠르게 찾기</h2>
+<p>지역과 관리 유형을 함께 찾으시는 분들이 많이 보는 안내를 모았습니다. 원하시는 주제를 누르면 해당 안내 페이지로 바로 이동합니다.</p>
+<ul class="rl-grid">
+<li><a href="/yeongdeungpo/yeouido-dong/"><span class="rl-q">여의도 오피스텔 심야 출장마사지</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/yeongdeungpo/yeongdeungpo-dong/"><span class="rl-q">영등포역 숙소 24시간 방문 홈타이</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/themes/swedish/"><span class="rl-q">스웨디시 전신 피로 회복 관리</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/themes/thai/"><span class="rl-q">타이마사지 스트레칭 근육 이완</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/themes/couple/"><span class="rl-q">커플 함께 받는 방문 관리</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/yeongdeungpo/dangsan-dong/"><span class="rl-q">당산역 환승 생활권 방문 마사지</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/themes/aroma/"><span class="rl-q">아로마테라피 숙면 릴랙스 케어</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/courses/#price"><span class="rl-q">60·90·120분 코스별 요금 안내</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/yeongdeungpo/mullae-dong/"><span class="rl-q">문래동 신축 단지 홈케어 방문</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/reviews/"><span class="rl-q">영등포 출장마사지 이용 후기·평점</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/themes/foot/"><span class="rl-q">발마사지 다리 붓기 피로 케어</span><span class="rl-go">바로가기 →</span></a></li>
+<li><a href="/guide/#first"><span class="rl-q">처음 이용 시 준비사항 가이드</span><span class="rl-go">바로가기 →</span></a></li>
+</ul>
+</section>
+
 <section id="course">
 <h2>코스 선택 안내</h2>
 <p>코스는 이용 목적과 그날의 컨디션에 따라 선택하시는 것이 좋습니다. 누적된 피로를 풀고 싶은 분, 편안한 휴식이 필요한 분, 운동 후 근육 이완이 필요한 분, 숙소로 방문을 원하시는 분, 커플이 함께 받고 싶은 분 등 상황에 맞는 선택 기준을 <a href="/courses/">코스안내</a> 페이지에서 자세히 다룹니다. 고민되시면 예약 전화에서 상태를 말씀해 주세요. 함께 정해 드립니다.</p>
@@ -218,7 +170,6 @@ PAGE = {
     "desc": "영등포 출장마사지·홈타이 방문 예약 안내. 영등포구 전지역과 주요 역세권, 테마별 관리를 확인하세요.",
     "h1": "영등포 출장마사지·홈타이 예약 안내",
     "body": _BODY,
-    "extra_head": _JSONLD,
     "breadcrumb": [],
     "hero": _HERO,
 }

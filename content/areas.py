@@ -2,6 +2,7 @@
 # 숫자 행정동(영등포동1가~8가, 신길3·4동 등) 개별 페이지는 만들지 않는다.
 from .site import PHONE, PHONE_DISPLAY
 from .pricing import PRICING
+from .related import area_links
 
 _CTA = f"""
 <section class="cta">
@@ -74,7 +75,7 @@ def _dong(slug, name, title_name, desc, sections):
         "title": f"{title_name} 출장마사지·홈타이 | 영등포 방문 관리 예약 안내",
         "desc": desc,
         "h1": f"{name} 방문 관리 안내",
-        "body": sections + PRICING + _CTA,
+        "body": sections + area_links(name) + PRICING + _CTA,
         "breadcrumb": [("지역별 안내", "/yeongdeungpo/"), (name, None)],
     }
 
