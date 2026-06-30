@@ -18,7 +18,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from content import PAGES
-from content.site import (BASE_URL, BRAND, NAV, PHONE, PHONE_DISPLAY)
+from content.schema import page_jsonld
+from content.site import (BASE_URL, BRAND, NAV, NAVER_VERIFY, PHONE,
+                          PHONE_DISPLAY)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 MIN_INDEX_CHARS = 2000
@@ -123,6 +125,14 @@ def render_page(page: dict) -> str:
         else '<meta name="robots" content="index,follow">'
     )
     canonical = BASE_URL.rstrip("/") + "/" + path
+
+    # 네이버 사이트 소유확인 + 전 페이지 공통 구조화 데이터(JSON-LD).
+    # WebSite·LocalBusiness(평점·후기)·WebPage·BreadcrumbList, FAQ 있으면 FAQPage 자동 생성.
+    schema_head = (
+        f'<meta name="naver-site-verification" content="{NAVER_VERIFY}" />\n'
+        + page_jsonld(page, canonical, body)
+    )
+    extra_head = schema_head + extra_head
 
     # 히어로가 있는 페이지(메인)는 H1을 히어로 안에서 출력한다.
     if hero:
@@ -284,7 +294,7 @@ def build() -> None:
     # sitemap.xml — lastmod 포함(색인 신선도 신호)
     urls = "\n".join(
         f"  <url><loc>{u}</loc><lastmod>{today}</lastmod>"
-        f"<changefreq>weekly</changefreq>"
+        f"<changefreq>{'daily' if u == base + '/' else 'weekly'}</changefreq>"
         f"<priority>{'1.0' if u == base + '/' else '0.8'}</priority></url>"
         for u in sitemap_urls
     )

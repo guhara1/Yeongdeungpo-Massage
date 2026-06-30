@@ -466,6 +466,67 @@ strong { color: var(--gold-soft); font-weight: 700; }
   .price-card.featured { order: -1; }
 }
 
+/* 롱테일 내부링크 블록 */
+.page-content section.related-links {
+  background:
+    radial-gradient(ellipse 70% 120% at 0% 0%, rgba(200, 162, 94, 0.06), transparent 60%),
+    linear-gradient(180deg, var(--panel) 0%, #0b1322 100%);
+}
+.rl-grid {
+  display: grid; gap: 10px; margin: 18px 0 4px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  list-style: none; margin-left: 0;
+}
+.rl-grid li { margin: 0; }
+.rl-grid a {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel-2); color: var(--text); font-size: 0.92rem;
+  line-height: 1.45; transition: 0.18s;
+}
+.rl-grid a:hover {
+  border-color: var(--gold); background: linear-gradient(180deg, #13203a, var(--panel-2));
+  transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+}
+.rl-grid .rl-q { font-weight: 500; }
+.rl-grid a:hover .rl-q { color: var(--gold-soft); }
+.rl-grid .rl-go {
+  flex: none; font-size: 0.78rem; color: var(--gold); letter-spacing: 0.02em; white-space: nowrap;
+}
+
+/* 종합 평점 + 후기 카드 */
+.rating-summary {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px;
+  padding: 18px 22px; margin: 4px 0 22px;
+  background: var(--panel-2); border: 1px solid var(--line-gold); border-radius: 14px;
+}
+.rating-score { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1; }
+.rating-stars { font-size: 1.2rem; color: var(--gold); letter-spacing: 0.08em; }
+.rating-count { font-size: 0.85rem; color: var(--text-dim); }
+.review-list {
+  display: grid; gap: 14px; margin: 8px 0 14px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  list-style: none; margin-left: 0;
+}
+.review-list li { margin: 0; }
+.review-card {
+  background: linear-gradient(180deg, #0b1322, #0a101e);
+  border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 6px; transition: 0.18s;
+}
+.review-card:hover { border-color: #2a3b63; transform: translateY(-2px); }
+.review-head { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+.review-stars { color: var(--gold); letter-spacing: 0.06em; font-size: 0.98rem; }
+.review-meta { font-size: 0.78rem; color: var(--text-dim); letter-spacing: 0.02em; }
+.review-title { font-weight: 700; color: var(--gold-soft); margin: 4px 0 0; }
+.review-body { color: var(--text-dim); margin: 0; font-size: 0.92rem; line-height: 1.75; }
+.review-author { font-size: 0.8rem; color: var(--text-dim); margin: 6px 0 0; opacity: 0.85; }
+.review-note { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+@media (max-width: 720px) {
+  .rl-grid, .review-list { grid-template-columns: 1fr; }
+}
+
 /* 매거진 */
 .post-meta {
   font-size: 0.8rem; color: var(--text-dim); letter-spacing: 0.06em;

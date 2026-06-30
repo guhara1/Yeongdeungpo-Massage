@@ -2,6 +2,7 @@
 # 환승역도 URL은 하나만 사용한다. 출구별·역+테마 조합 페이지는 만들지 않는다.
 from .site import PHONE, PHONE_DISPLAY
 from .pricing import PRICING
+from .related import station_links
 
 _CTA = f"""
 <section class="cta">
@@ -83,7 +84,7 @@ def _station(slug, name, desc, body):
         "title": f"{name} 출장마사지·홈타이 | 역세권 방문 관리 안내",
         "desc": desc,
         "h1": f"{name} 인근 방문 관리 안내",
-        "body": body + PRICING + _CTA,
+        "body": body + station_links(name) + PRICING + _CTA,
         "breadcrumb": [("지하철역별 안내", "/yeongdeungpo/stations/"), (name, None)],
     }
 

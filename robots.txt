@@ -13,5 +13,5 @@ Allow: /
 User-agent: Daumoa
 Allow: /
 
-Sitemap: https://yeongdeungpo-massage.pages.dev/sitemap.xml
-Sitemap: https://yeongdeungpo-massage.pages.dev/rss.xml
+Sitemap: https://yeongdeungpo-massage.netlify.app/sitemap.xml
+Sitemap: https://yeongdeungpo-massage.netlify.app/rss.xml
